@@ -1,0 +1,31 @@
+<<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Users</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div align = "center">
+<h1>Users</h1>
+<form th:action="@{/admin}">
+    	<input type="submit" value="Admin Menu" > 	
+		</form>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>User</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text = "${user.id}"></td>
+        <td th:text="${user.username}"></td>
+      
+    </tr>
+    </tbody>
+</table>
+</div>
+</body>
+</html>

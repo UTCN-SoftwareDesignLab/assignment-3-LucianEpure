@@ -1,10 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Administrator</title>
 </head>
 <body>
+
+<div align = "left">
+		<h1>Admin Menu</H1>
+		<div align = "left"  style="background-color:lightblue">
+  				 <h4>Validation</h4>
+ 				 <p th:text="${valid}" /></p>
+ 		</div>
+ 				 
+ 		<div align = "right">
+ 				 <form action = "#" th:action="@{/admin}" method = "post">
+ 				 <p><input type="submit" name="logout" value="Log Out" /> </p>
+ 				 </form>
+ 		</div> 
+		<br>
+		</div>
+		
+		<h3>Add User</h3>
+        <form action="#" name="addUser" th:action="@{/admin}"  th:object="${userDto}" method="post">
+    	<p>Username: <input type="text" onfocus="this.value=''" th:field="*{username}" /></p>
+        <p>Password: <input type="password" onfocus="this.value=''" th:field="*{password}" /></p>
+        <p>Type</p>
+        <select name ="type"  >
+    	<option value="secretary">Secretary</option>
+  		<option value="doctor">Doctor</option>
+    	<option th:each="option : ${options}" th:text="${option}" ></option>
+    	</select>
+        <p><input type="submit" name="addUser" value="Register" /> </p>
+		</form>
+		
+		
+		<br>
+		<h3>Show Users</h3>
+		<form action="#" name="showUsers" th:action="@{/admin/showUsers}"  method="post">
+        <p><input type="submit" name="showUsers" value="Show Users" /> </p>     
+		</form>
+		
+		<br>
+		<h3>Delete User</h3>
+		<form action="#" name="deleteUser" th:action="@{/admin}"  method="post">
+        <p>DeleteId: <input type="text" onfocus="this.value=''" name ="deleteId" id="deleteId" /></p>
+        <p><input type="submit" name="deleteUser" value="Delete User" /> </p>	
+		</form>
+	
+		
+		
+		<h3>Update User</h3>
+       	<form action="#" name="updateUser" th:action="@{/admin}" th:object="${userDto}" method="post">
+    	<p>Id: <input type = "text" onfocus="this.value=''"  th:field = "*{id}"/></p>
+    	<p>Username: <input type="text" onfocus="this.value=''" th:field = "*{username}" /></p>	
+    	<p>Password: <input type="password" th:field = "*{password}" /></p>
+        <p><input type="submit"  name="updateUser" value="Update" /> </p>
+        </form>
+
 
 </body>
 </html>

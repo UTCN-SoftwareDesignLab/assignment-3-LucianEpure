@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import dto.UserDto;
 //import validators.Notification;
 import service.UserService;
+import validators.Notification;
 
 
 @Controller
@@ -32,11 +33,11 @@ private UserService userService;
 	}
 	@PostMapping(params="register")
     public String register( @ModelAttribute UserDto user, Model model) {	
-		userService.save(user,"administrator");
-		/*if(notification.hasErrors())
+		Notification<Boolean> notification = userService.save(user,"administrator");
+		if(notification.hasErrors())
 			model.addAttribute("valid", notification.getFormattedErrors());
 		else
-			model.addAttribute("valid", "Succesfully registered!");*/
+			model.addAttribute("valid", "Succesfully registered!");
         return "login";
 	}
 }
