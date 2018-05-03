@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import dto.UserDto;
 import entity.User;
-import service.UserService;
+import service.user.UserService;
 import validators.Notification;
 
 
@@ -59,7 +59,7 @@ private UserService userService;
 	
 	@PostMapping(value = "/showUsers",params="showUsers")
 	 public String findAll(Model model) {
-	        List<User> users = userService.findAll();
+	        List<UserDto> users = userService.findAll();
 	        model.addAttribute("users", users);
 	        return "showUsers";
 	    }

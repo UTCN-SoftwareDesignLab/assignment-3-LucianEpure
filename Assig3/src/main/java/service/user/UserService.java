@@ -1,4 +1,4 @@
-package service;
+package service.user;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ public interface UserService {
 
 	Notification<Boolean> save(UserDto user, String type);
 	
-	public Notification<Boolean> update(UserDto user);
+	Notification<Boolean> update(UserDto user);
 	
 	void fireById(int id);
 
-	List<User> findAll();
+	List<UserDto> findAll();
 }

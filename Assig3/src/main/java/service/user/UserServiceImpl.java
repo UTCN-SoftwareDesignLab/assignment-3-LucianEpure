@@ -1,4 +1,4 @@
-package service;
+package service.user;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import converter.UserConverter;
 import dto.UserDto;
 import entity.Role;
 import entity.User;
@@ -21,13 +22,15 @@ import validators.UserValidator;
 public class UserServiceImpl implements UserService{
 
 	private UserRepository userRepository;
+	private UserConverter userConverter;
 	private RoleRepository roleRepository;
 	private IValidator validator;
 	
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository){
+	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserConverter userConverter){
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
+		this.userConverter = userConverter;
 	}
 	
 	@Override
@@ -46,6 +49,7 @@ public class UserServiceImpl implements UserService{
 			List<Role> userRoles = dbUser.getRoles();
 			userRoles.add(roleRepository.findByRoleName(type));
 			dbUser.setRoles(userRoles);
+			System.out.println(dbUser.getRoles());
 			userRepository.save(dbUser);
 			userRegisterNotification.setResult(Boolean.TRUE);
 		}
@@ -53,11 +57,12 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Override
-	public List<User> findAll() {
-
+	public List<UserDto> findAll() {
 		final Iterable<User> users = userRepository.findAll();
-		List<User> result = new ArrayList<User>();
-		users.forEach(result::add);
+		List<UserDto> result = new ArrayList<UserDto>();
+		for(User user:users){
+			result.add(userConverter.convertToDto(user));
+		}
 		return result;
 	}
 	

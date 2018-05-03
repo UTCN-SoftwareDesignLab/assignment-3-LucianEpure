@@ -15,14 +15,14 @@
     <tr>
         <th>Id</th>
         <th>User</th>
-
+		<th>Roles</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="user : ${users}">
         <td th:text = "${user.id}"></td>
         <td th:text="${user.username}"></td>
-      
+      	<td th:text="${user.roles}"></td>
     </tr>
     </tbody>
 </table>

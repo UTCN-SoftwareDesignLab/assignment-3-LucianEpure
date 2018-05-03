@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import dto.UserDto;
-//import validators.Notification;
-import service.UserService;
+import service.user.UserService;
 import validators.Notification;
 
 

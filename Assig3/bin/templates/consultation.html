@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Consultation</title>
+</head>
+<body>
+
+<div align = "left">
+		<h1>Secretary Menu</H1>
+		<div align = "left"  style="background-color:lightblue">
+  				 <h4>Validation</h4>
+ 				 <p th:text="${valid}" /></p>
+ 		</div>
+ 				 
+ 		<div align = "right">
+ 				 <form action = "#" th:action="@{/secretary/consultation}" method = "post">
+ 				 <p><input type="submit" name="logout" value="Log Out" /> </p>
+ 				 </form>
+ 		</div> 
+		<br>
+		</div>
+		
+		<h3>Add Consultation</h3>
+        <form action="#" name="addConsultation" th:action="@{/secretary/consultation}"  th:object="${consultationDto}" method="post">
+    	<p>Patient Id: <input type="text" onfocus="this.value=''" th:field="*{patientId}" /></p>
+        <p>Doctor Id: <input type="text" onfocus="this.value=''" th:field="*{userId}" /></p>
+        <p>Date: <input type="text" onfocus="this.value=''" th:field="*{scheduledDate}" /></p>
+  	    <p><input type="submit" name="addConsultation" value="Add Consultation" /> </p>
+		</form>
+		
+		<br>
+		<h3>Show Patients</h3>
+		<form action="#" name="showPatients" th:action="@{/secretary/consultation/showPatients}"  method="post">
+        <p><input type="submit" name="showPatients" value="Show Patients" /> </p>     
+		</form>
+		
+		<br>
+		<h3>Show Doctors</h3>
+		<form action="#" name="showDoctors" th:action="@{/secretary/consultation/showDoctors}"  method="post">
+        <p><input type="submit" name="showDoctors" value="Show Doctors" /> </p>     
+		</form>
+		
+			<br>
+		<h3>Show Consultations</h3>
+		<form action="#" name="showConsultations" th:action="@{/secretary/consultation/showConsultations}"  method="post">
+        <p><input type="submit" name="showConsultations" value="Show Consultations" /> </p>     
+		</form>
+		
+		
+</body>
+</html>

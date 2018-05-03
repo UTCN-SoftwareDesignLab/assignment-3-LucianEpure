@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -17,75 +16,68 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import dto.ConsultationDto;
 import dto.PatientDto;
 import dto.UserDto;
-import entity.Patient;
-import entity.User;
 import service.consultation.ConsultationService;
 import service.patient.PatientService;
+import service.user.UserService;
 import validators.Notification;
 
 @Controller
-@RequestMapping(value = "/secretary")
-public class SecretaryController {
+@RequestMapping(value = "/secretary/consultation")
+public class ConsultationController {
 
-private PatientService patientService;
-//private ConsultationService consultationService;
-
-@Autowired
-public SecretaryController (PatientService patientService)
-{
-	this.patientService = patientService;
-	//this.consultationService = consultationService;
-}
+	private ConsultationService consultationService;
+	private PatientService patientService;
+	private UserService userService;
+	
+	@Autowired
+	public ConsultationController(ConsultationService consultationService,PatientService patientService, UserService userService){
+		this.consultationService = consultationService;
+		this.patientService = patientService;
+		this.userService = userService;
+	}
+	
 	@GetMapping()
 	@Order(value = 1)
 	 public String displayMenu( Model model) {	
-		model.addAttribute("patientDto", new PatientDto());	
-		return "secretary";
+		model.addAttribute("consultationDto", new ConsultationDto());
+		return "consultation";
 	    }
 	
-	@PostMapping(params = "addPatient")
-	public String addPatient(@ModelAttribute PatientDto patient,Model model){
-		Notification<Boolean> notification = patientService.save(patient);
+	@PostMapping(params = "addConsultation")
+	public String addConsultation(@ModelAttribute ConsultationDto consultation,Model model){
+		Notification<Boolean> notification = consultationService.addConsultation(consultation);
 		//model.addAttribute(new UserDto());	
 		if(notification.hasErrors())
 			model.addAttribute("valid", notification.getFormattedErrors());
 		else
 			model.addAttribute("valid", "Succesfully registered!");
-		return "secretary";
+		return "consultation";
 	}
 	
 	@PostMapping(value = "/showPatients",params="showPatients")
-	 public String findAll(Model model) {
+	 public String findAllPatients(Model model) {
 	        List<PatientDto> patients = patientService.findAll();
 	        model.addAttribute("patients", patients);
 	        return "showPatients";
 	    }
 	
-	
-	@PostMapping(params="deletePatient")
-	 public String delete( @RequestParam("deleteId") String deleteId, Model model) {
-			patientService.delete(Integer.parseInt(deleteId));
-			return "redirect:/secretary";
+	@PostMapping(value = "/showDoctors",params="showDoctors")
+	 public String findAllDoctors(Model model) {
+	       List<UserDto> doctors = consultationService.findAllDoctors();
+	       model.addAttribute("doctors", doctors);
+	        return "showDoctors";
 	    }
 	
-	@PostMapping(params = "updatePatient")
-	//public String updateUser(@RequestParam("updateId") String updateId,@RequestParam("newUsername") String newUsername,@RequestParam Model model){
-	public String updatePatient(@ModelAttribute PatientDto patient, Model model){
-		Notification<Boolean> notification = patientService.update(patient);
-		//	model.addAttribute(new UserDto());	
-		if(notification.hasErrors())
-			model.addAttribute("valid", notification.getFormattedErrors());
-		else
-			model.addAttribute("valid", "Succesfully updated!");
-		return "secretary";
-	}
-	
-	
+	@PostMapping(value = "/showConsultations",params="showConsultations")
+	 public String findAllConsultations(Model model) {
+	       List<ConsultationDto> consultations = consultationService.findAllConsultations();
+	       model.addAttribute("consultations", consultations);
+	        return "showConsultations";
+	    }
 	
 	@PostMapping(params="logout")
     public String logout(HttpServletRequest request, HttpServletResponse response){
@@ -95,5 +87,4 @@ public SecretaryController (PatientService patientService)
         }
         return "redirect:/login";
 	}
-
 }
