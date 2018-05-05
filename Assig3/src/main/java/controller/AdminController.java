@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -41,8 +40,11 @@ private UserService userService;
 	
 	@GetMapping()
 	@Order(value = 1)
-	 public String displayMenu( Model model,HttpSession session) {	
-					model.addAttribute(new UserDto());	
+	 public String displayMenu( Model model) {	
+					model.addAttribute(new UserDto());
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String name = auth.getName(); //get logged in username
+					model.addAttribute("username", name);
 					return "administrator";
 	    }
 	

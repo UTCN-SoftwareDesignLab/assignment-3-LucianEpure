@@ -13,4 +13,10 @@ public interface ConsultationService {
 	List<ConsultationDto> findAllConsultations();
 	
 	List<UserDto> findAllDoctors();
+
+	List<ConsultationDto> seeDoctorSchedule(int doctorId);
+
+	Notification<Boolean> update(ConsultationDto consultation);
+
+	void delete(int id);
 }

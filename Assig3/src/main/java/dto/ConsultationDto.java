@@ -9,6 +9,12 @@ public class ConsultationDto {
 	private int userId;
 	private String diagnostic;
 	private String scheduledDate;
+
+	public ConsultationDto(){
+
+    }
+
+
 	public int getId() {
 		return id;
 	}

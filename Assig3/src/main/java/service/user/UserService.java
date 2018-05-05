@@ -15,4 +15,6 @@ public interface UserService {
 	void fireById(int id);
 
 	List<UserDto> findAll();
+
+	User findByUsername(String username);
 }

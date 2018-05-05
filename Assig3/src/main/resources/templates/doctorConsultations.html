@@ -1,0 +1,36 @@
+<<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Users</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div align = "center">
+    <h1>Doctors</h1>
+    <form th:action="@{/doctor}">
+        <input type="submit" value="Doctor Menu" >
+    </form>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Patient Id</th>
+            <th>Doctor Id</th>
+            <th>Date</th>
+            <th>Diagnostic</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="consultation : ${consultations}">
+            <td th:text ="${consultation.id}"></td>
+            <td th:text="${consultation.patientId}"></td>
+            <td th:text="${consultation.userId}"></td>
+            <td th:text="${consultation.scheduledDate}"></td>
+            <td th:text="${consultation.diagnostic}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

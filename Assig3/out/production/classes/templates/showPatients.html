@@ -1,0 +1,39 @@
+<<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Users</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div align = "center">
+<h1>Users</h1>
+<form th:action="@{/secretary}">
+    	<input type="submit" value="Secretary Menu" > 	
+		</form>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+         <th>CNP</th>
+         <th>card id</th>
+      	 <th>birth date</th>
+         <th>address</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="patient : ${patients}">
+        <td th:text = "${patient.id}"></td>
+        <td th:text="${patient.name}"></td>
+        <td th:text="${patient.CNP}"></td>
+        <td th:text="${patient.cardId}"></td>
+        <td th:text="${patient.birthDate}"></td>
+        <td th:text="${patient.address}"></td>
+      
+    </tr>
+    </tbody>
+</table>
+</div>
+</body>
+</html>

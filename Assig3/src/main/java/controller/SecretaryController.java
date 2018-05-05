@@ -44,7 +44,10 @@ public SecretaryController (PatientService patientService)
 	@GetMapping()
 	@Order(value = 1)
 	 public String displayMenu( Model model) {	
-		model.addAttribute("patientDto", new PatientDto());	
+		model.addAttribute("patientDto", new PatientDto());
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String name = auth.getName(); //get logged in username
+		model.addAttribute("username", name);
 		return "secretary";
 	    }
 	

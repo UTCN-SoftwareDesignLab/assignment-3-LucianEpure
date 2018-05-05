@@ -96,14 +96,17 @@ public class PatientServiceImpl implements PatientService{
 		return patientRegisterNotification;
 	}
 	private Date extractDate(String dateString) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-d");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		Date date;
 		try {
 			date = df.parse(dateString);
 			return date;
+
 		} catch (ParseException e) {
-		
+
 		}
+
+
 		return null;
 	}
 	

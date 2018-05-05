@@ -59,12 +59,21 @@ public class ConsultationServiceImpl implements ConsultationService{
 		else{
 			Patient patient = patientRepository.getOne(consultation.getPatientId());
 			User doctor = userRepository.getOne(consultation.getUserId());
-			
 			if(patient==null)
 				consultationNotification.addError("No such patient!");
 			if(doctor ==null)
 				consultationNotification.addError("No such doctor!");
-			
+			List<Consultation> consultations = consultationRepository.findByDoctor(doctor);
+			for(Consultation consult:consultations){
+				if(consult.getScheduledDate().equals(extractDate(consultation.getScheduledDate())))
+				{
+					if(Math.abs(consult.getScheduledDate().getTime() - extractDate(consultation.getScheduledDate()).getTime())<3600000){
+						consultationNotification.addError("Not enough time between consultations");
+						return consultationNotification;
+					}
+				}
+
+			}
 			Consultation dbConsultation = new ConsultationBuilder().setPatient(patient).setDoctor(doctor).setDate(extractDate(consultation.getScheduledDate())).build();
 			consultationRepository.save(dbConsultation);
 		}
@@ -73,14 +82,18 @@ public class ConsultationServiceImpl implements ConsultationService{
 	
 
 	private Date extractDate(String dateString) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-d");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date date;
 		try {
 			date = df.parse(dateString);
+			System.out.println("AAAAAAAAAAAa"+date.toString()+"bbbbb" +date.getTime());
 			return date;
+
 		} catch (ParseException e) {
 		
 		}
+
+
 		return null;
 	}
 
@@ -98,6 +111,8 @@ public class ConsultationServiceImpl implements ConsultationService{
 		return result;
 	}
 
+
+
 	@Override
 	public List<ConsultationDto> findAllConsultations() {
 		final Iterable<Consultation> consultations = consultationRepository.findAll();
@@ -107,6 +122,44 @@ public class ConsultationServiceImpl implements ConsultationService{
 		}
 		return result;
 	}
-	
+	@Override
+	public List<ConsultationDto> seeDoctorSchedule(int doctorId) {
+		User doctor = userRepository.getOne(doctorId);
+		final Iterable<Consultation> consultations = consultationRepository.findByDoctor(doctor);
+		List<ConsultationDto> result = new ArrayList<ConsultationDto>();
+		for(Consultation consultation:consultations){
+			result.add(consultationConverter.convertToDto(consultation));
+		}
+		return result;
+	}
+
+
+
+	@Override
+	public Notification<Boolean> update(ConsultationDto consultation) {
+		validator = new ConsultationValidator(consultation);
+
+		boolean consultationValid = validator.validate();
+		Notification<Boolean> consultationNotification = new Notification<>();
+		if(!consultationValid){
+			validator.getErrors().forEach(consultationNotification::addError);
+			consultationNotification.setResult(Boolean.FALSE);
+		}
+		else{
+			Consultation dbConsultation = consultationRepository.getOne(consultation.getId());
+			dbConsultation.setDoctor(userRepository.getOne(consultation.getUserId()));
+			dbConsultation.setPatient(patientRepository.getOne(consultation.getPatientId()));
+			dbConsultation.setDiagnostic(consultation.getDiagnostic());
+			dbConsultation.setScheduledDate(extractDate(consultation.getScheduledDate()));
+			consultationRepository.save(dbConsultation);
+			consultationNotification.setResult(Boolean.TRUE);
+		}
+		return consultationNotification;
+	}
+
+	@Override
+	public void delete(int id) {
+		consultationRepository.deleteById(id);
+	}
 
 }

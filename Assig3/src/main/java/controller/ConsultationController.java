@@ -5,21 +5,22 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import entity.Greeting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import dto.ConsultationDto;
 import dto.PatientDto;
 import dto.UserDto;
+import org.springframework.web.util.HtmlUtils;
 import service.consultation.ConsultationService;
 import service.patient.PatientService;
 import service.user.UserService;
@@ -78,7 +79,39 @@ public class ConsultationController {
 	       model.addAttribute("consultations", consultations);
 	        return "showConsultations";
 	    }
-	
+
+	@PostMapping(params="deleteConsultation")
+	public String delete( @RequestParam("deleteId") String deleteId, Model model) {
+		consultationService.delete(Integer.parseInt(deleteId));
+		return "redirect:/secretary/consultation";
+	}
+
+	@PostMapping(value = "/showConsultations", params="checkSchedule")
+	public String check(@RequestParam("doctorId") String doctorId, Model model) {
+		List<ConsultationDto> consultations = consultationService.seeDoctorSchedule(Integer.parseInt(doctorId));
+		model.addAttribute("consultations", consultations);
+		return "showConsultations";
+	}
+
+	@PostMapping(params = "updateConsultation")
+	//public String updateUser(@RequestParam("updateId") String updateId,@RequestParam("newUsername") String newUsername,@RequestParam Model model){
+	public String updateConsultation(@ModelAttribute ConsultationDto consultation, Model model){
+		Notification<Boolean> notification = consultationService.update(consultation);
+		//	model.addAttribute(new UserDto());
+		if(notification.hasErrors())
+			model.addAttribute("valid", notification.getFormattedErrors());
+		else
+			model.addAttribute("valid", "Succesfully updated!");
+		return "consultation";
+	}
+/*
+	@MessageMapping("/consult")
+	@SendTo("/topic/greetings")
+	public Greeting greeting(ConsultationDto consultationDto) throws Exception {
+		Thread.sleep(1000); // simulated delay
+		return new Greeting("Hello, " + HtmlUtils.htmlEscape(String.valueOf(consultationDto.getPatientId())) + "!");
+	}*/
+
 	@PostMapping(params="logout")
     public String logout(HttpServletRequest request, HttpServletResponse response){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -87,4 +120,6 @@ public class ConsultationController {
         }
         return "redirect:/login";
 	}
+
+
 }
