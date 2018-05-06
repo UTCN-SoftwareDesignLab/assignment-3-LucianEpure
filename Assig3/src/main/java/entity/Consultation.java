@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Consultation {
@@ -15,6 +16,8 @@ public class Consultation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
+
+
 	private Date scheduledDate;
 	
 	@ManyToOne
@@ -31,6 +34,8 @@ public class Consultation {
 	public void setId(int id) {
 		this.id = id;
 	}
+
+
 	public Date getScheduledDate() {
 		return scheduledDate;
 	}

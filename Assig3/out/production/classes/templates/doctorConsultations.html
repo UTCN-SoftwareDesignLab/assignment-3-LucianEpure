@@ -3,8 +3,14 @@
 <head>
     <title>Users</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/main.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="js/doctor.js"></script>
 </head>
-<body>
+<body onload = "connect()" onunload = "disconnect()">
 <div align = "center">
     <h1>Doctors</h1>
     <form th:action="@{/doctor}">
@@ -29,6 +35,18 @@
             <td th:text="${consultation.scheduledDate}"></td>
             <td th:text="${consultation.diagnostic}"></td>
         </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="col-md-12">
+    <table id="conversation" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Reminders</th>
+        </tr>
+        </thead>
+        <tbody id="messages">
         </tbody>
     </table>
 </div>

@@ -17,10 +17,14 @@ public class ConsultationValidator implements IValidator{
 	}
 	@Override
 	public boolean validate() {
-		// TODO Auto-generated method stub
+		validateDate();
 		return errors.isEmpty();
 	}
 
+	public void validateDate(){
+		if(consultation.getScheduledDate()==null)
+			errors.add("No date!");
+	}
 	@Override
 	public List<String> getErrors() {
 		// TODO Auto-generated method stub

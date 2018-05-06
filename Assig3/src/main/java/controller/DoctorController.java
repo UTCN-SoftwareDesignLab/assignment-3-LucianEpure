@@ -24,7 +24,7 @@ import service.user.UserService;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/doctor")
+
 public class DoctorController {
 
 	private ConsultationService consultationService;
@@ -35,7 +35,7 @@ public class DoctorController {
 		this.userService = userService;
 	}
 
-	@GetMapping()
+	@GetMapping(value = "/doctor")
 	@Order(value = 1)
 	 public String displayMenu( Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -54,14 +54,14 @@ public class DoctorController {
 		return  "doctorConsultations";
 	}
 
-	@PostMapping( params = "diagnose")
+	@PostMapping( value = "/doctor", params = "diagnose")
 	public String diagnose(@RequestParam("consultationId") String consultationId,@RequestParam("diagnose") String diagnose){
  		consultationService.diagnose(Integer.parseInt(consultationId),diagnose);
 		return  "doctor";
 	}
 
 
-	@PostMapping(params="logout")
+	@PostMapping(value = "/doctor", params="logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response){
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null){
