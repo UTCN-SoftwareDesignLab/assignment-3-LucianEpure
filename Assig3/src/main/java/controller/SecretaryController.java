@@ -1,13 +1,17 @@
 package controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+import entity.Message;
+import entity.Reminder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -19,12 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import dto.ConsultationDto;
 import dto.PatientDto;
-import dto.UserDto;
-import entity.Patient;
-import entity.User;
-import service.consultation.ConsultationService;
 import service.patient.PatientService;
 import validators.Notification;
 
@@ -34,6 +33,10 @@ public class SecretaryController {
 
 private PatientService patientService;
 //private ConsultationService consultationService;
+
+
+	@Autowired
+	private SimpMessagingTemplate messagingTemplate;
 
 @Autowired
 public SecretaryController (PatientService patientService)
@@ -98,5 +101,8 @@ public SecretaryController (PatientService patientService)
         }
         return "redirect:/login";
 	}
+
+
+
 
 }

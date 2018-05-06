@@ -72,6 +72,11 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	public User findById(int id) {
+		return userRepository.getOne(id);
+	}
+
+	@Override
 	public void fireById(int id) {
 		userRepository.deleteById(id);
 		

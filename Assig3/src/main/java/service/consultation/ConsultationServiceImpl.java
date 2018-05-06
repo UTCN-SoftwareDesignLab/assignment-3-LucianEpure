@@ -65,13 +65,12 @@ public class ConsultationServiceImpl implements ConsultationService{
 				consultationNotification.addError("No such doctor!");
 			List<Consultation> consultations = consultationRepository.findByDoctor(doctor);
 			for(Consultation consult:consultations){
-				if(consult.getScheduledDate().equals(extractDate(consultation.getScheduledDate())))
-				{
+
 					if(Math.abs(consult.getScheduledDate().getTime() - extractDate(consultation.getScheduledDate()).getTime())<3600000){
 						consultationNotification.addError("Not enough time between consultations");
 						return consultationNotification;
 					}
-				}
+
 
 			}
 			Consultation dbConsultation = new ConsultationBuilder().setPatient(patient).setDoctor(doctor).setDate(extractDate(consultation.getScheduledDate())).build();
@@ -155,6 +154,13 @@ public class ConsultationServiceImpl implements ConsultationService{
 			consultationNotification.setResult(Boolean.TRUE);
 		}
 		return consultationNotification;
+	}
+
+	@Override
+	public void diagnose(int id, String diagnostic) {
+		Consultation consultation = consultationRepository.getOne(id);
+		consultation.setDiagnostic(diagnostic);
+		consultationRepository.save(consultation);
 	}
 
 	@Override

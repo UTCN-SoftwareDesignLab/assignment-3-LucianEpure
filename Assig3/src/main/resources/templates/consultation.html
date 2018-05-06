@@ -5,13 +5,14 @@
 <head>
 <title>Consultation</title>
 	<link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	<link href="application.css" rel="stylesheet">
+	<link href="/main.css" rel="stylesheet">
 	<script src="/webjars/jquery/jquery.min.js"></script>
 	<script src="/webjars/sockjs-client/sockjs.min.js"></script>
 	<script src="/webjars/stomp-websocket/stomp.min.js"></script>
-	<script src="static/js/app.js"></script>
+	<script src="js/app.js"></script>
 </head>
-<body>
+<body onload = "connect()" onunload = "disconnect()">
+
 <div id="application-content" class="container">
 <div align = "left">
 		<h1>Secretary Menu</H1>
@@ -21,51 +22,15 @@
  		</div>
  				 
  		<div align = "right">
- 				 <form action = "#" th:action="@{/secretary/consultation}" method = "post">
+ 				 <form action = "#" th:action="@{/consultation}" method = "post">
  				 <p><input type="submit" name="logout" value="Log Out" /> </p>
  				 </form>
  		</div> 
 		<br>
 		</div>
-<!--
-	<div class="row">
-		<div class="col-md-6">
-			<form class="form-inline">
-				<div class="form-group">
-					<label for="connect">WebSocket connection:</label>
-					<button id="connect" class="btn btn-default" type="submit">Connect</button>
-					<button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-					</button>
-				</div>
-			</form>
-		</div>
-		<div class="col-md-6">
-			<form class="form-inline">
-				<div class="form-group">
-					<label for="patientId">What is your name?</label>
-					<input type="text" id="patientId" class="form-control" placeholder="Your name here...">
-				</div>
-				<button id="send" class="btn btn-default" type="submit">Send</button>
-			</form>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-12">
-			<table id="conversation" class="table table-striped">
-				<thead>
-				<tr>
-					<th>Greetings</th>
-				</tr>
-				</thead>
-				<tbody id="greetings">
-				</tbody>
-			</table>
-		</div>
-	</div>
--->
 
 		<h3>Add Consultation</h3>
-        <form action="#" name="addConsultation" th:action="@{/secretary/consultation}"  th:object="${consultationDto}" method="post">
+        <form action="#" name="addConsultation" th:action="@{/consultation}"  th:object="${consultationDto}" method="post">
     	<p>Patient Id: <input type="text" onfocus="this.value=''" th:field="*{patientId}" /></p>
         <p>Doctor Id: <input type="text" onfocus="this.value=''" th:field="*{userId}" /></p>
         <p>Date: <input type="text" onfocus="this.value=''" th:field="*{scheduledDate}" /></p>
@@ -74,36 +39,36 @@
 		
 		<br>
 		<h3>Show Patients</h3>
-		<form action="#" name="showPatients" th:action="@{/secretary/consultation/showPatients}"  method="post">
+		<form action="#" name="showPatients" th:action="@{/consultation/showPatients}"  method="post">
         <p><input type="submit" name="showPatients" value="Show Patients" /> </p>     
 		</form>
 		
 		<br>
 		<h3>Show Doctors</h3>
-		<form action="#" name="showDoctors" th:action="@{/secretary/consultation/showDoctors}"  method="post">
+		<form action="#" name="showDoctors" th:action="@{/consultation/showDoctors}"  method="post">
         <p><input type="submit" name="showDoctors" value="Show Doctors" /> </p>     
 		</form>
 		
 			<br>
 		<h3>Show Consultations</h3>
-		<form action="#" name="showConsultations" th:action="@{/secretary/consultation/showConsultations}"  method="post">
+		<form action="#" name="showConsultations" th:action="@{/consultation/showConsultations}"  method="post">
         <p><input type="submit" name="showConsultations" value="Show Consultations" /> </p>     
 		</form>
 		<br>
 		<h3>CheckSchedule</h3>
-		<form action="#" name="checkSchedule" th:action="@{/secretary/consultation/showConsultations}"  method="post">
+		<form action="#" name="checkSchedule" th:action="@{/consultation/showConsultations}"  method="post">
 			<p>DoctorId: <input type="text" onfocus="this.value=''" name ="doctorId" id="doctorId" /></p>
 			<p><input type="submit" name="checkSchedule" value="Check Schedule" /> </p>
 		</form>
 		<br>
 		<h3>Delete Consultation</h3>
-		<form action="#" name="deleteConsultation" th:action="@{/secretary/consultation}"  method="post">
+		<form action="#" name="deleteConsultation" th:action="@{/consultation}"  method="post">
 		<p>DeleteId: <input type="text" onfocus="this.value=''" name ="deleteId" id="deleteId" /></p>
 		<p><input type="submit" name="deleteConsultation" value="Delete Consultation" /> </p>
 		</form>
 		<br>
 		<h3>Update Consultation</h3>
-		<form action="#" name="updateConsultation" th:action="@{/secretary/consultation}" th:object="${consultationDto}" method="post">
+		<form action="#" name="updateConsultation" th:action="@{/consultation}" th:object="${consultationDto}" method="post">
 		<p>Id: <input type = "text" onfocus="this.value=''"  th:field = "*{id}"/></p>
 		<p>Patient Id: <input type="text" onfocus="this.value=''" th:field="*{patientId}" /></p>
 		<p>Doctor Id: <input type="text" onfocus="this.value=''" th:field="*{userId}" /></p>
@@ -112,6 +77,33 @@
 
 		<p><input type="submit" name="updateConsultation" value="Update Consultation" /> </p>
 		</form>
+
+	<div id="main-content" class="container">
+		<div class="row">
+			<div class="col-md-6">
+
+				<div class="form-group">
+					<label for="connect">WebSocket connection:</label>
+					<input id="login" type="text" />
+					<button id="connect" class="btn btn-default" type="submit">Connect</button>
+					<button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+					</button>
+				</div>
+
+			</div>
+			<div class="col-md-6">
+
+				<div class="form-group">
+					<label for="name">Receiver name ?</label>
+					<input type="text" id="name" class="form-control" placeholder="Your name here...">
+				</div>
+				<button id="send" class="btn btn-default" type="submit">Send</button>
+
+			</div>
+		</div>
+
+
+	</div>
 
 </div>
 </body>

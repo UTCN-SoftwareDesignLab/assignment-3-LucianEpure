@@ -37,7 +37,7 @@ public class DoctorController {
 
 	@GetMapping()
 	@Order(value = 1)
-	 public String displayMenu( Model model,HttpSession session) {
+	 public String displayMenu( Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String name = auth.getName(); //get logged in username
 		model.addAttribute("username", name);
@@ -53,6 +53,13 @@ public class DoctorController {
 		model.addAttribute("consultations",consultations);
 		return  "doctorConsultations";
 	}
+
+	@PostMapping( params = "diagnose")
+	public String diagnose(@RequestParam("consultationId") String consultationId,@RequestParam("diagnose") String diagnose){
+ 		consultationService.diagnose(Integer.parseInt(consultationId),diagnose);
+		return  "doctor";
+	}
+
 
 	@PostMapping(params="logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response){

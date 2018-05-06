@@ -1,15 +1,16 @@
 package controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import entity.Greeting;
+import entity.Message;
+import entity.Reminder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -20,20 +21,23 @@ import org.springframework.web.bind.annotation.*;
 import dto.ConsultationDto;
 import dto.PatientDto;
 import dto.UserDto;
-import org.springframework.web.util.HtmlUtils;
 import service.consultation.ConsultationService;
 import service.patient.PatientService;
 import service.user.UserService;
 import validators.Notification;
 
 @Controller
-@RequestMapping(value = "/secretary/consultation")
+@RequestMapping(value = "/consultation")
 public class ConsultationController {
 
 	private ConsultationService consultationService;
 	private PatientService patientService;
 	private UserService userService;
-	
+
+	@Autowired
+	private SimpMessagingTemplate messagingTemplate;
+
+
 	@Autowired
 	public ConsultationController(ConsultationService consultationService,PatientService patientService, UserService userService){
 		this.consultationService = consultationService;
@@ -42,23 +46,31 @@ public class ConsultationController {
 	}
 	
 	@GetMapping()
-	@Order(value = 1)
 	 public String displayMenu( Model model) {	
 		model.addAttribute("consultationDto", new ConsultationDto());
 		return "consultation";
 	    }
-	
+
 	@PostMapping(params = "addConsultation")
-	public String addConsultation(@ModelAttribute ConsultationDto consultation,Model model){
+	@MessageMapping("/reminder")
+	public String addConsultation(@ModelAttribute ConsultationDto consultation,Model model,Principal principal, Reminder reminder){
 		Notification<Boolean> notification = consultationService.addConsultation(consultation);
 		//model.addAttribute(new UserDto());	
-		if(notification.hasErrors())
+		if(notification.hasErrors()) {
 			model.addAttribute("valid", notification.getFormattedErrors());
-		else
+		}
+		else{
 			model.addAttribute("valid", "Succesfully registered!");
+			Message message = new Message();
+			message.setContent("from "+principal.getName()+" patient:"+consultation.getPatientId()+" at date:" + consultation.getScheduledDate());
+
+			messagingTemplate.convertAndSendToUser(userService.findById(consultation.getUserId()).getUsername(), "/queue/reply", message);
+		}
+
+
 		return "consultation";
 	}
-	
+
 	@PostMapping(value = "/showPatients",params="showPatients")
 	 public String findAllPatients(Model model) {
 	        List<PatientDto> patients = patientService.findAll();
@@ -83,7 +95,7 @@ public class ConsultationController {
 	@PostMapping(params="deleteConsultation")
 	public String delete( @RequestParam("deleteId") String deleteId, Model model) {
 		consultationService.delete(Integer.parseInt(deleteId));
-		return "redirect:/secretary/consultation";
+		return "redirect:/consultation";
 	}
 
 	@PostMapping(value = "/showConsultations", params="checkSchedule")
@@ -110,7 +122,11 @@ public class ConsultationController {
 	public Greeting greeting(ConsultationDto consultationDto) throws Exception {
 		Thread.sleep(1000); // simulated delay
 		return new Greeting("Hello, " + HtmlUtils.htmlEscape(String.valueOf(consultationDto.getPatientId())) + "!");
-	}*/
+	}
+*/
+
+
+
 
 	@PostMapping(params="logout")
     public String logout(HttpServletRequest request, HttpServletResponse response){
