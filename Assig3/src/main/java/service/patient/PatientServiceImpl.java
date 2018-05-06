@@ -69,7 +69,12 @@ public class PatientServiceImpl implements PatientService{
 	public void delete(int id) {
 		patientRepository.deleteById(id);
 	}
-	
+
+	@Override
+	public void removeAll() {
+		patientRepository.deleteAll();
+	}
+
 	@Override
 	public Notification<Boolean> update(PatientDto patient) {
 		

@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import entity.Message;
-import entity.Reminder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -53,7 +52,7 @@ public class ConsultationController {
 
 	@PostMapping(params = "addConsultation")
 	@MessageMapping("/reminder")
-	public String addConsultation(@ModelAttribute ConsultationDto consultation,Model model,Principal principal, Reminder reminder){
+	public String addConsultation(@ModelAttribute ConsultationDto consultation,Model model,Principal principal){
 		Notification<Boolean> notification = consultationService.addConsultation(consultation);
 		//model.addAttribute(new UserDto());	
 		if(notification.hasErrors()) {

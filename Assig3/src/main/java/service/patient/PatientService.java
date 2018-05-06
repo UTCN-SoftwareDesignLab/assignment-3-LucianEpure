@@ -16,4 +16,6 @@ public interface PatientService {
 	List<PatientDto> findAll();
 	
 	void delete(int id);
+
+	void removeAll();
 }

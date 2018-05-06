@@ -19,4 +19,6 @@ public interface UserService {
 	User findByUsername(String username);
 
 	User findById(int id);
+
+	void removeAll();
 }

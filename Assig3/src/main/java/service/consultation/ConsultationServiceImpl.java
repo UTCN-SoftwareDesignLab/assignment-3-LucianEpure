@@ -168,4 +168,9 @@ public class ConsultationServiceImpl implements ConsultationService{
 		consultationRepository.deleteById(id);
 	}
 
+	@Override
+	public void removeAll() {
+		consultationRepository.deleteAll();
+	}
+
 }

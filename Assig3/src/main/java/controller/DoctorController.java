@@ -55,8 +55,8 @@ public class DoctorController {
 	}
 
 	@PostMapping( value = "/doctor", params = "diagnose")
-	public String diagnose(@RequestParam("consultationId") String consultationId,@RequestParam("diagnose") String diagnose){
- 		consultationService.diagnose(Integer.parseInt(consultationId),diagnose);
+	public String diagnose(@RequestParam("consultationId") String consultationId,@RequestParam("diagnostic") String diagnostic){
+ 		consultationService.diagnose(Integer.parseInt(consultationId),diagnostic);
 		return  "doctor";
 	}
 

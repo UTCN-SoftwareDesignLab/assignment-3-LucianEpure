@@ -19,5 +19,8 @@ public interface ConsultationService {
 	Notification<Boolean> update(ConsultationDto consultation);
 
 	void diagnose(int id, String diagnostic);
+
 	void delete(int id);
+
+	void removeAll();
 }

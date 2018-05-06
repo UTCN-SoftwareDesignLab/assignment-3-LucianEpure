@@ -10,6 +10,8 @@ public class PatientDto {
 	private int cardId;
 	private String birthDate;
 	private String address;
+
+
 	public int getId() {
 		return id;
 	}
