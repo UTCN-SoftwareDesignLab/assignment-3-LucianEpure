@@ -78,6 +78,13 @@
 		<p><input type="submit" name="updateConsultation" value="Update Consultation" /> </p>
 		</form>
 
+		<br>
+		<h3>CheckIn</h3>
+		<form action="#" name="checkIn" th:action="@{/consultation}" method="post">
+		<p>ConsultationId: <input type="text" onfocus="this.value=''" name ="consultationId" id="consultationId" /></p>
+		<p><input type="submit" name="checkIn" value="Check In" /> </p>
+		</form>
+
 
 
 </div>

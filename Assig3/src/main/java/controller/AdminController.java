@@ -41,11 +41,11 @@ private UserService userService;
 	@GetMapping()
 	@Order(value = 1)
 	 public String displayMenu( Model model) {	
-					model.addAttribute(new UserDto());
+		model.addAttribute(new UserDto());
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String name = auth.getName(); //get logged in username
-					model.addAttribute("username", name);
-					return "administrator";
+		model.addAttribute("username", name);
+		return "administrator";
 	    }
 	
 	@PostMapping(params = "addUser")

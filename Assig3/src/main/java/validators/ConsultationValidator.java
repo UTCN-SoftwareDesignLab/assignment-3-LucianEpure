@@ -25,6 +25,9 @@ public class ConsultationValidator implements IValidator{
 		if(consultation.getScheduledDate()==null)
 			errors.add("No date!");
 	}
+	public void validatePacient(){
+
+	}
 	@Override
 	public List<String> getErrors() {
 		// TODO Auto-generated method stub

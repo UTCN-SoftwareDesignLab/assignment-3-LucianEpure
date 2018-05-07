@@ -4,7 +4,6 @@ import dto.ConsultationDto;
 import entity.Consultation;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Converter;
 
 @Component
 public class ConsultationConverterImpl implements ConsultationConverter {

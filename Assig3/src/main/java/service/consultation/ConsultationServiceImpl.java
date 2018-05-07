@@ -59,41 +59,17 @@ public class ConsultationServiceImpl implements ConsultationService{
 		else{
 			Patient patient = patientRepository.getOne(consultation.getPatientId());
 			User doctor = userRepository.getOne(consultation.getUserId());
-			if(patient==null)
-				consultationNotification.addError("No such patient!");
-			if(doctor ==null)
-				consultationNotification.addError("No such doctor!");
 			List<Consultation> consultations = consultationRepository.findByDoctor(doctor);
 			for(Consultation consult:consultations){
-
 					if(Math.abs(consult.getScheduledDate().getTime() - extractDate(consultation.getScheduledDate()).getTime())<3600000){
 						consultationNotification.addError("Not enough time between consultations");
 						return consultationNotification;
 					}
-
-
 			}
 			Consultation dbConsultation = new ConsultationBuilder().setPatient(patient).setDoctor(doctor).setDate(extractDate(consultation.getScheduledDate())).build();
 			consultationRepository.save(dbConsultation);
 		}
 		return consultationNotification;
-	}
-	
-
-	private Date extractDate(String dateString) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		Date date;
-		try {
-			date = df.parse(dateString);
-			System.out.println("AAAAAAAAAAAa"+date.toString()+"bbbbb" +date.getTime());
-			return date;
-
-		} catch (ParseException e) {
-		
-		}
-
-
-		return null;
 	}
 
 	@Override
@@ -109,8 +85,6 @@ public class ConsultationServiceImpl implements ConsultationService{
 		}
 		return result;
 	}
-
-
 
 	@Override
 	public List<ConsultationDto> findAllConsultations() {
@@ -157,6 +131,11 @@ public class ConsultationServiceImpl implements ConsultationService{
 	}
 
 	@Override
+	public ConsultationDto findById(int id) {
+		return consultationConverter.convertToDto(consultationRepository.getOne(id));
+	}
+
+	@Override
 	public void diagnose(int id, String diagnostic) {
 		Consultation consultation = consultationRepository.getOne(id);
 		consultation.setDiagnostic(diagnostic);
@@ -173,4 +152,16 @@ public class ConsultationServiceImpl implements ConsultationService{
 		consultationRepository.deleteAll();
 	}
 
+
+	private Date extractDate(String dateString) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date date;
+		try {
+			date = df.parse(dateString);
+			return date;
+		} catch (ParseException e) {
+
+		}
+		return null;
+	}
 }

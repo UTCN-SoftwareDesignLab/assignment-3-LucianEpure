@@ -65,9 +65,17 @@ public class ConsultationController {
 
 			messagingTemplate.convertAndSendToUser(userService.findById(consultation.getUserId()).getUsername(), "/queue/reply", message);
 		}
-
-
 		return "consultation";
+	}
+	@PostMapping(params = "checkIn")
+	@MessageMapping("/checkIn")
+	public String checkIn(@RequestParam("consultationId") String consultationId, Model model,Principal principal){
+
+			Message message = new Message();
+			message.setContent("from "+principal.getName()+" patient:"+ consultationService.findById(Integer.parseInt(consultationId)).getPatientId()+" has arrived at the clinic!");
+
+			messagingTemplate.convertAndSendToUser(userService.findById(consultationService.findById(Integer.parseInt(consultationId)).getUserId()).getUsername(), "/queue/reply", message);
+		return "redirect:/consultation";
 	}
 
 	@PostMapping(value = "/showPatients",params="showPatients")

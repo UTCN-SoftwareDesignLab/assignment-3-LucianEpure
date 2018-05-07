@@ -18,6 +18,8 @@ public interface ConsultationService {
 
 	Notification<Boolean> update(ConsultationDto consultation);
 
+	ConsultationDto findById(int id);
+
 	void diagnose(int id, String diagnostic);
 
 	void delete(int id);

@@ -28,7 +28,6 @@ import validators.Notification;
 public class SecretaryController {
 
 private PatientService patientService;
-//private ConsultationService consultationService;
 
 
 	@Autowired
@@ -38,7 +37,7 @@ private PatientService patientService;
 public SecretaryController (PatientService patientService)
 {
 	this.patientService = patientService;
-	//this.consultationService = consultationService;
+
 }
 	@GetMapping()
 	@Order(value = 1)
